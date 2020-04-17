@@ -135,7 +135,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     
     return instances[0]
 
-def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.small'):
+def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.small', mounted_vol=None):
     netconfiglist = []
 
     # assume 1st one is for public 
@@ -150,16 +150,25 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
     netconfiglist = []
     netconfiglist.append(public_netconfig)
    
+    devicemappings = []
+    # add the default root volume 
+    rootvol = {}
+    rootvol['DeviceName'] = '/dev/sda1'
+    rootvol['Ebs'] = {}
+    rootvol['Ebs']['DeleteOnTermination'] = True
+
+    devicemappings.append(rootvol)
+
+    if mounted_vol != None: 
+        mountvol = {}
+        mountvol['DeviceName'] = mounted_vol
+        mountvol['Ebs'] = {}
+        mountvol['Ebs']['DeleteOnTermination'] = True
+        devicemappings.append(mountvol)
+
     # create instance with volumes deleted when instance terminates
     instances = ec2.create_instances(
-        BlockDeviceMappings = [
-            {
-                'DeviceName' : '/dev/sda1',
-                'Ebs': {
-                    'DeleteOnTermination': True
-                }
-            }
-        ],
+        BlockDeviceMappings = devicemappings,
         ImageId = ami_id,
         InstanceType = size,
         MaxCount = num_instances,
