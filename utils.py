@@ -135,7 +135,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     
     return instances[0]
 
-def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True):
+def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.small'):
     netconfiglist = []
 
     # assume 1st one is for public 
@@ -161,7 +161,7 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
             }
         ],
         ImageId = ami_id,
-        InstanceType = 't2.small',
+        InstanceType = size,
         MaxCount = num_instances,
         MinCount = num_instances,
         NetworkInterfaces= netconfiglist,
