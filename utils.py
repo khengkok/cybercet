@@ -54,7 +54,7 @@ def get_subnetId(vpc_id, subnetname):
 
 def create_interface(subnet_id):
     response = ec2_client.create_network_interface(
-                    SubnetId = private_subnet_id
+                    SubnetId = subnet_id
                 )
     if_id = response['NetworkInterface']['NetworkInterfaceId']
     if_ip = response['NetworkInterface']['PrivateIpAddresses'][0]['PrivateIpAddress']
@@ -150,8 +150,16 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
     netconfiglist = []
     netconfiglist.append(public_netconfig)
    
-    
+    # create instance with volumes deleted when instance terminates
     instances = ec2.create_instances(
+        BlockDeviceMappings = [
+            {
+                'DeviceName' : '/dev/sda1',
+                'Ebs': {
+                    'DeleteOnTermination': True
+                }
+            }
+        ],
         ImageId = ami_id,
         InstanceType = 't2.small',
         MaxCount = num_instances,
@@ -225,5 +233,59 @@ def get_instances_info(instanceIdList):
         info['nets'] = sorted(net_infos, key = lambda e : e['intf_index'])
         infos.append(info)
     return infos
+
+def delete_instances(instanceIdList):
+    response = ec2_client.describe_instances(
+        InstanceIds = instanceIdList
+    )
+    instances = response['Reservations'][0]['Instances']
+    net_info_to_delete = []
+
+    for instance in instances:
+        net_infos = []
+        for net_if in instance['NetworkInterfaces']:
+            net_info = {}
+            device_index = net_if['Attachment']['DeviceIndex']
+            net_info['intf_index'] = device_index
+            net_info['if_id'] = net_if['NetworkInterfaceId']
+            net_info['attachment_id'] = net_if['Attachment']['AttachmentId']
+            net_infos.append(net_info)
+        if len(net_infos) > 1:
+            for net_info in net_infos:
+                # we only delete non-0 interface 
+                if net_info['intf_index'] != 0:
+                    net_info_to_delete.append(net_info)
+
+
+    print('stopping instances...')
+    ec2_client.stop_instances(InstanceIds = instanceIdList, Force=True)
+    
+    notStoppedList = instanceIdList.copy()
+    # must wait until all instances terminated before deleting the network interfaces
+    time.sleep(5)  # wait for a while before checking status.. to avoid wasted API call
+    while len(notStoppedList) != 0:
+        response = ec2_client.describe_instances(
+                    InstanceIds=notStoppedList
+        )
+        to_stop_instances = response['Reservations'][0]['Instances']
+        for inst in to_stop_instances:
+            if inst['State']['Name'] == 'stopped':
+                stopped_instance_id = inst['InstanceId']
+                print('stopped id = {}'.format(stopped_instance_id))
+                notStoppedList.remove(stopped_instance_id)
+        print('instances waiting to stop = {}'.format(notStoppedList))
+        time.sleep(5)
+
+    ## now all instances are terminated, delete all the network interfaces
+    for net_info in net_info_to_delete: 
+        print('detaching interface={}'.format(net_info['if_id']))
+        response = ec2_client.detach_network_interface(AttachmentId=net_info['attachment_id'], Force=True)
+        print('deleting interface={}'.format(net_info['if_id']))
+        ec2_client.delete_network_interface(NetworkInterfaceId=net_info['if_id'])
+
+    ## now terminate all instances
+    ec2_client.terminate_instances(InstanceIds = instanceIdList)
+    return 
+
 
       
