@@ -1,4 +1,4 @@
-# cybercet
+# SIT Cyber Security CET (short courses) AWS Cloud User Guide
 
 This repo contains scripts to provision various aws instances for different labs
 utils contains the core functions. 
