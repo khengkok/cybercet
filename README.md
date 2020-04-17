@@ -28,6 +28,7 @@ To run the scripts you need the following to be setup before hand:
     ```
 
 Assuming you clone the repo to the directory c:\Users\markk\git\cybercet, to run the script, for example to provision the windows server 2016 DC lab, change the git repo directory: 
+
     ```
     cd c:\Users\markk\git\cybercet 
     python win2016dc_lab_script.py -p 3 -o netinfo.csv 
@@ -35,6 +36,6 @@ Assuming you clone the repo to the directory c:\Users\markk\git\cybercet, to run
 
 The command above will provision instances for 3 participants. If the lab needs 3 VMs per participant, then a total of 9 VMs will be provisioned. In the case above, only 1 VM is required per participant, so only 3 VMs will be provisioned. 
 
-You can get help by using the option -h or --help, e.g. python win2016dc_lab_script.py --help
+You can get help by using the option `-h` or `--help`, e.g. `python win2016dc_lab_script.py --help`
 
 
