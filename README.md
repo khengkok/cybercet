@@ -37,9 +37,8 @@ The command above will provision instances for 3 participants. If the lab needs 
 
 You can get help by using the option `-h` or `--help`, e.g. `python win2016dc_lab_script.py --help`
 
-To deprovisio all the VMs after the lesson, you run the same script with the -d option and specify the csv file you specified earlier in your provisioning, e.g. 
+To deprovision all the VMs after the lesson, you run the same script with the -d option and specify the csv file you specified earlier in your provisioning, e.g. 
     ```
-    cd c:\Users\markk\git\cybercet 
     python win2016dc_lab_script.py -d netinfo.csv 
     ```
 
