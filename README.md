@@ -42,12 +42,12 @@ To deprovision all the VMs after the lesson, you run the same script with the -d
     python win2016dc_lab_script.py -d netinfo.csv 
     ```
 
-Here are the different scripts for the various labs:
+Here are the different scripts for the various labs (based on Wanling's Google Spreadsheet as of 18 April 2020)
 
 |Topic               |Workshop                   |Primary Teaching Staff|Course|VM1|VM2|VM3                     |Scripts_to_use |
 |--------------------|---------------------------|----------------------|------|---|---|------------------------|---------------|
-|Cyber Forensics     |Data Acquisition           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_script.py|
-|Cyber Forensics     |Data Examination           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_script.py|
+|Cyber Forensics     |Data Acquisition           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
+|Cyber Forensics     |Data Examination           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
 |Malware Analysis    |Lab Setup                  |Wanling               |CEFP  |Win 7 - malware analysis|Win 7 - Gateway|                        |malware_lab_script.py|
 |Malware Analysis    |Static and Dynamic Analysis|Wanling               |CEFP  |Win 7 - malware analysis|Win 7 - Gateway|                        |malware_lab_script.py|
 |Network Security    |Hack Lab                   |Bala                  |CDF   |Kali 2020|Win 7|Win 7 - Gateway         |hacklab.py     |
@@ -55,4 +55,5 @@ Here are the different scripts for the various labs:
 |Network Security    |IDS                        |Bala                  |CEFP  |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Network Security    |Firewall                   |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Network Security    |IDS                        |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
-|Application Security|Application Security       |Peck Leng             |CEFP  |Win 10|   |                        |* waiting for testing           |
+|Application Security|Application Security       |Peck Leng             |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
+|???? |???       |Sunny?             |??  |Win server 2016dc|   |                        |win2016dc_lab_script.py|
