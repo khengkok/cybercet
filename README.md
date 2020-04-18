@@ -55,4 +55,4 @@ Here are the different scripts for the various labs:
 |Network Security    |IDS                        |Bala                  |CEFP  |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Network Security    |Firewall                   |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Network Security    |IDS                        |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
-|Application Security|Application Security       |Peck Leng             |CEFP  |Win 10|   |                        |TBD            |
+|Application Security|Application Security       |Peck Leng             |CEFP  |Win 10|   |                        |* waiting for testing           |
