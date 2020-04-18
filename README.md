@@ -30,10 +30,10 @@ To run the scripts you need the following to be setup before hand:
 
 Assuming you clone the repo to the directory c:\Users\markk\git\cybercet, to run the script, for example to provision the windows server 2016 DC lab, change the git repo directory: 
 
-    ```
-    cd c:\Users\markk\git\cybercet 
-    python win2016dc_lab_script.py -p 3 -o netinfo.csv 
-    ```
+ ```
+ cd c:\Users\markk\git\cybercet 
+ python win2016dc_lab_script.py -p 3 -o netinfo.csv 
+ ```
     
 The command above will provision instances for 3 participants. If the lab needs 3 VMs per participant, then a total of 9 VMs will be provisioned. In the case above, only 1 VM is required per participant, so only 3 VMs will be provisioned. 
 
@@ -41,9 +41,9 @@ You can get help by using the option `-h` or `--help`, e.g. `python win2016dc_la
 
 To deprovision all the VMs after the lesson, you run the same script with the -d option and specify the csv file you specified earlier in your provisioning, e.g. 
 
-    ```
-    python win2016dc_lab_script.py -d netinfo.csv 
-    ```
+ ```
+ python win2016dc_lab_script.py -d netinfo.csv 
+ ```
 
 Here are the different scripts for the various labs (based on Wanling's Google Spreadsheet as of 18 April 2020)
 
