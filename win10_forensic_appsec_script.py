@@ -3,7 +3,7 @@ import csv
 import argparse
 
 # Configuration:
-# windows server 2016 in a single public subnet
+# windows 10 in a single public subnet
 
 
 vpc = 'vpc-cet'
