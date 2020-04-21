@@ -61,4 +61,14 @@ Here are the different scripts for the various labs (based on Wanling's Google S
 |Network Security    |Firewall                   |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Network Security    |IDS                        |Wie Leng              |CDF   |Cloud pfsense|Win 7|Win 7 - Gateway         |firewall_ids_script.py|
 |Application Security|Application Security       |Peck Leng             |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
-|???? |???       |Sunny?             |??  |Win server 2016dc|   |                        |win2016dc_lab_script.py|
+|Network Security |IIS/SSL |Bala             |CDF  |Win server 2016dc|   |                        |win2016dc_lab_script.py|
+|Pen Testing |DNS Zone Transfer |Wie Leng            |CEFP  |Win server 2016|   Kali|                        |dnszonexfer_script.py|
+|Pen Testing |Hacking/Password Crack |Wie Leng            |CEFP  |Kali|   Windows 10 gateway| Windows 7                        |hacklab.py|
+|Server Security |Audit Events/DoS Alert | Sunny            |CDF  |Win srv 2016|   |   |win2016dc_lab_script.py|
+|Server Security |Audit Events/DoS Alert | Sunny            |CEFP  |Win srv 2016|   |   |win2016dc_lab_script.py|
+|Server Security |Windows AD Policy | Sunny            |CDF  |Win srv 2016 AD|   |   |win2016AD_lab_script.py (TBD)|
+|Server Security |Windows AD Policy | Sunny            |CEFP |Win srv 2016 AD|   |   |win2016AD_lab_script.py (TBD)|
+|Server Security |Linux Access Control | Sunny            |CDF  |CentOS|   |   |linux_acl_lab_script.py (TBD)|
+|Server Security |Linux Access Control | Sunny            |CDF  |CentOS|   |   |linux_acl_lab_script.py (TBD)|
+
+
