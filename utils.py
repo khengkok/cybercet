@@ -296,5 +296,20 @@ def delete_instances(instanceIdList):
     ec2_client.terminate_instances(InstanceIds = instanceIdList)
     return 
 
+def tag_instances(instanceIdList, name):
 
-      
+    for index, instanceId in enumerate(instanceIdList):
+        tagValue = name + '-' + str(index+1)
+        print('tagging {} with value = {}'.format(instanceId, tagValue))
+        response = ec2_client.create_tags(
+            DryRun=False,
+            Resources=[
+                instanceId,
+            ],
+            Tags=[
+                {
+                    'Key': 'Name',
+                    'Value': tagValue
+                },
+            ]
+        )

@@ -39,6 +39,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(kali_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    tag_instances(instanceIdList, 'kali')
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 
@@ -60,6 +61,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    tag_instances(instanceIdList, 'win7gw')
     win7_gw_infos = get_instances_info(instanceIdList)
     print(win7_gw_infos)
 
@@ -77,7 +79,8 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_victim_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
-    win7_victim_infos = get_instances_info(instanceIdList)
+    tag_instances(instanceIdList, 'win7victim')
+    win7_victim_infos = get_instances_info(instanceIdList) 
     print(win7_victim_infos)
 
     # format csv

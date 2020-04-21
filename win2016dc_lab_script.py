@@ -34,6 +34,7 @@ def prov(num_instances, out_csvfile):
                                       auto_assign_public_ip=True,
                                       size='t2.large')
                                       
+    tag_instances(instanceIdList, 'win2016dc')
     winserver2016dc_infos = get_instances_info(instanceIdList)
     print(winserver2016dc_infos)
 

@@ -34,7 +34,8 @@ def prov(num_instances, out_csvfile):
                                       auto_assign_public_ip=True,
                                       size='t2.medium',
                                       mounted_vol='xvdf')
-                                      
+
+    tag_instances(instanceIdList, 'win10forensic')                                  
     win10forensic_infos = get_instances_info(instanceIdList)
     print(win10forensic_infos)
 

@@ -43,6 +43,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win2016dc_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True, size='t2.large')
+    tag_instances(instanceIdList, 'win2016dc')
     win2016dc_infos = get_instances_info(instanceIdList)
     print(win2016dc_infos)
 
@@ -65,6 +66,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(kali2020_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    tag_instances(instanceIdList, 'kali')
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 

@@ -40,6 +40,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(pfsense_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    tag_instances(instanceIdList, 'pfsense')
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)
 
@@ -62,6 +63,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    tag_instances(instanceIdList, 'win7gw')
     win7_gw_infos = get_instances_info(instanceIdList)
     print(win7_gw_infos)
 
@@ -80,6 +82,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_internl_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
+    tag_instances(instanceIdList, 'win7internal')
     win7_internal_infos = get_instances_info(instanceIdList)
     print(win7_internal_infos)
 
