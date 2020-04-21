@@ -247,24 +247,31 @@ def delete_instances(instanceIdList):
     response = ec2_client.describe_instances(
         InstanceIds = instanceIdList
     )
-    instances = response['Reservations'][0]['Instances']
     net_info_to_delete = []
-
-    for instance in instances:
-        net_infos = []
-        for net_if in instance['NetworkInterfaces']:
-            net_info = {}
-            device_index = net_if['Attachment']['DeviceIndex']
-            net_info['intf_index'] = device_index
-            net_info['if_id'] = net_if['NetworkInterfaceId']
-            net_info['attachment_id'] = net_if['Attachment']['AttachmentId']
-            net_infos.append(net_info)
-        if len(net_infos) > 1:
-            for net_info in net_infos:
-                # we only delete non-0 interface 
-                if net_info['intf_index'] != 0:
-                    net_info_to_delete.append(net_info)
-
+    #print('number of instances returned by describing = {}'.format(len(instances)))
+    for reservation in response['Reservations']:
+        instances = reservation['Instances']
+        for instance in instances:    
+            #print('checking interfaces of instance = {}'.format(instance['InstanceId']))
+            net_infos = []
+            for net_if in instance['NetworkInterfaces']:
+                net_info = {}
+                device_index = net_if['Attachment']['DeviceIndex']
+                net_info['intf_index'] = device_index
+                net_info['if_id'] = net_if['NetworkInterfaceId']
+                net_info['attachment_id'] = net_if['Attachment']['AttachmentId']
+                net_infos.append(net_info)
+                #print('got interface id = {}'.format(net_info['if_id']))
+            if len(net_infos) > 1:
+                for net_info in net_infos:
+                    # we only delete non-0 interface 
+                    if net_info['intf_index'] != 0:
+                        net_info_to_delete.append(net_info)
+                        #print('net_if {} is non-zero intf, adding to delete'.format(net_info['if_id']))
+                    # else:
+                    #     print('net_if {} is intf 0, skipping'.format(net_info['if_id']))
+            # else: 
+            #     print('instance {} only has single interface, skip delete intf'.format(instance['InstanceId']))
 
     print('stopping instances...')
     ec2_client.stop_instances(InstanceIds = instanceIdList, Force=True)
@@ -286,6 +293,10 @@ def delete_instances(instanceIdList):
         time.sleep(5)
 
     ## now all instances are terminated, delete all the network interfaces
+    # wait for a while before deleting interfaces... it is because sometime the assignment is 
+    # is not released yet 
+    
+    time.sleep(5) 
     for net_info in net_info_to_delete: 
         print('detaching interface={}'.format(net_info['if_id']))
         response = ec2_client.detach_network_interface(AttachmentId=net_info['attachment_id'], Force=True)
