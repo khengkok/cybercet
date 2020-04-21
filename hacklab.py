@@ -23,7 +23,7 @@ def prov(num_instances, out_csvfile):
 
     # kali
     secgrpnames_public = ['allow_ssh_vpc_demo']  # public 
-    secgrpnames_private = ['block_all_inbound_vpc_demo']  # private
+    secgrpnames_private = ['block_all_inbound_vpc_demo', 'allow_4444_inbound_vpc_demo']  # private
 
     public_secgrpIdlist = get_secgrpIds(secgrpnames_public)
     private_secgrpIdlist = get_secgrpIds(secgrpnames_private)
