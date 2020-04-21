@@ -34,7 +34,7 @@ def prov(num_instances, out_csvfile):
                                       auto_assign_public_ip=True,
                                       size='t2.large')
                                       
-    tag_instances(instanceIdList, 'win2016dc')
+    
     winserver2016dc_infos = get_instances_info(instanceIdList)
     print(winserver2016dc_infos)
 
@@ -42,10 +42,12 @@ def prov(num_instances, out_csvfile):
     # format csv
     info_dict_list = []
     
-    for win_info in winserver2016dc_infos:
+    for index, win_info in enumerate(winserver2016dc_infos):
         info_dict = {}
         info_dict['win2016dc_instance_id'] = win_info['id']
         info_dict['win2016dc_public_ip'] = win_info['public_ip']
+        name = 'win2016dc-' + str(index+1)
+        tag_instance(info_dict['win2016dc_instance_id'], name)
         for intf in win_info['nets']:
             keyname = 'win2016dc_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']

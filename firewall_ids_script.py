@@ -40,7 +40,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(pfsense_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    tag_instances(instanceIdList, 'pfsense')
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)
 
@@ -63,7 +62,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    tag_instances(instanceIdList, 'win7gw')
     win7_gw_infos = get_instances_info(instanceIdList)
     print(win7_gw_infos)
 
@@ -82,7 +80,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_internl_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
-    tag_instances(instanceIdList, 'win7internal')
     win7_internal_infos = get_instances_info(instanceIdList)
     print(win7_internal_infos)
 
@@ -91,20 +88,26 @@ def prov(num_instances, out_csvfile):
 
     info_dict_list = []
     
-    for pfsense_info, win7_gw_info, win7_internal_info in combined_infos:
+    for index, (pfsense_info, win7_gw_info, win7_internal_info) in  enumerate(combined_infos):
         info_dict = {}
         info_dict['pfsense_instance_id'] = pfsense_info['id']
         info_dict['pfsense_public_ip'] = pfsense_info['public_ip']
+        name = 'pfsense-' + str(index+1)
+        tag_instance(info_dict['pfsense_instance_id'], name)
         for intf in pfsense_info['nets']:
             keyname = 'pfsense_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
         info_dict['windows7_gw_instance_id'] = win7_gw_info['id']
         info_dict['windows7_gw_public_ip'] = win7_gw_info['public_ip']
+        name = 'win7gw-' + str(index+1)
+        tag_instance(info_dict['windows7_gw_instance_id'], name)
         for intf in win7_gw_info['nets']:
             keyname = 'windows7_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
         info_dict['windows7_internal_instance_id'] = win7_internal_info['id']
         #info_dict['windows7_2_public_ip'] = win7_1_info['public_ip']
+        name = 'win7internal-' + str(index+1)
+        tag_instance(info_dict['windows7_internal_instance_id'], name)
         for intf in win7_internal_info['nets']:
             keyname = 'windows7_internal_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']

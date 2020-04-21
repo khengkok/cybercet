@@ -43,7 +43,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win2016dc_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True, size='t2.large')
-    tag_instances(instanceIdList, 'win2016dc')
+    
     win2016dc_infos = get_instances_info(instanceIdList)
     print(win2016dc_infos)
 
@@ -66,7 +66,7 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(kali2020_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    tag_instances(instanceIdList, 'kali')
+    
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 
@@ -77,15 +77,19 @@ def prov(num_instances, out_csvfile):
 
     info_dict_list = []
     
-    for win2016_info, kali_info in combined_infos:
+    for index, (win2016_info, kali_info) in enumerate(combined_infos):
         info_dict = {}
         info_dict['win2016dc_instance_id'] = win2016_info['id']
         info_dict['win2016dc_public_ip'] = win2016_info['public_ip']
+        name = 'win2016dc-' + str(index+1)
+        tag_instance(info_dict['win2016dc_instance_id'], name)
         for intf in win2016_info['nets']:
             keyname = 'win2016dc_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
         info_dict['kali_instance_id'] = kali_info['id']
         info_dict['kali_public_ip'] = kali_info['public_ip']
+        name = 'kali-' + str(index+1)
+        tag_instance(info_dict['kali_instance_id'], name)
         for intf in kali_info['nets']:
             keyname = 'kali_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']

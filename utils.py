@@ -201,7 +201,7 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
                             SubnetId = subnet
                         )
                         if_id = create_net_response['NetworkInterface']['NetworkInterfaceId']
-                        print('attacing if_id = {}, to instance_id = {}'.format(if_id, running_instance_id))
+                        print('attaching if_id = {}, to instance_id = {}'.format(if_id, running_instance_id))
                         ec2_client.attach_network_interface(
                             DeviceIndex = index,
                             InstanceId = running_instance_id,

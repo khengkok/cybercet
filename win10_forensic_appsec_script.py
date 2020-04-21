@@ -43,10 +43,12 @@ def prov(num_instances, out_csvfile):
     # format csv
     info_dict_list = []
     
-    for win_info in win10forensic_infos:
+    for index, win_info in enumerate(win10forensic_infos):
         info_dict = {}
         info_dict['win10forensic_instance_id'] = win_info['id']
         info_dict['win10forensic_public_ip'] = win_info['public_ip']
+        name = 'win10forensic-' + str(index+1)
+        tag_instance(info_dict['win10forensic_instance_id'], name)
         for intf in win_info['nets']:
             keyname = 'win10forensic_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
