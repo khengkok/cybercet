@@ -39,7 +39,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(kali_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    tag_instances(instanceIdList, 'kali')
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 
@@ -61,7 +60,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    tag_instances(instanceIdList, 'win7gw')
     win7_gw_infos = get_instances_info(instanceIdList)
     print(win7_gw_infos)
 
@@ -79,7 +77,6 @@ def prov(num_instances, out_csvfile):
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
     instanceIdList = create_instances(win7_victim_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
-    tag_instances(instanceIdList, 'win7victim')
     win7_victim_infos = get_instances_info(instanceIdList) 
     print(win7_victim_infos)
 
@@ -88,20 +85,25 @@ def prov(num_instances, out_csvfile):
 
     info_dict_list = []
     
-    for pfsense_info, win7_1_info, win7_2_info in combined_infos:
+    for index, (pfsense_info, win7_1_info, win7_2_info) in enumerate(combined_infos):
         info_dict = {}
         info_dict['kali_instance_id'] = pfsense_info['id']
+        name = 'kali-' + str(index+1)
+        tag_instance(info_dict['kali_instance_id'], name)
         info_dict['kali_public_ip'] = pfsense_info['public_ip']
         for intf in pfsense_info['nets']:
             keyname = 'kali_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
         info_dict['win7_gw_instance_id'] = win7_1_info['id']
+        name = 'win7gw-' + str(index+1)
+        tag_instance(info_dict['win7_gw_instance_id'], name)
         info_dict['win7_gw_public_ip'] = win7_1_info['public_ip']
         for intf in win7_1_info['nets']:
             keyname = 'win7_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
         info_dict['win7_victim_instance_id'] = win7_2_info['id']
-        #info_dict['windows7_2_public_ip'] = win7_1_info['public_ip']
+        name = 'win7victim-' + str(index+1)
+        tag_instance(info_dict['win7_victim_instance_id'], name)
         for intf in win7_2_info['nets']:
             keyname = 'win7_victim_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']

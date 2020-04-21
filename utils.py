@@ -313,3 +313,17 @@ def tag_instances(instanceIdList, name):
                 },
             ]
         )
+
+def tag_instance(instancId, name):
+    response = ec2_client.create_tags(
+            DryRun=False,
+            Resources=[
+                instancId,
+            ],
+            Tags=[
+                {
+                    'Key': 'Name',
+                    'Value': name
+                },
+            ]
+        )
