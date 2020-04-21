@@ -15,10 +15,14 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
+pfsense_ami_id = 'ami-0664409a3efaa1e8d'
+win7_gw_ami_id = 'ami-021ad573e15d1bf7d'
+win7_internl_ami_id = 'ami-021ad573e15d1bf7d'
+
 def prov(num_instances, out_csvfile):
 
     # pfsense 
-    pfsense_ami_id = 'ami-0077821e284c5f18e'
+ 
     secgrpnames_public = ['pfsense_vpcdemo']  # public 
     secgrpnames_private = ['pfsense_vpcdemo']  # private
 
@@ -39,8 +43,8 @@ def prov(num_instances, out_csvfile):
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)
 
-    # win7#1 (public/private) 
-    win7_1_ami_id = 'ami-021ad573e15d1bf7d'
+    # win7_gw (public/private) 
+
     secgrpnames_public = ['win7rdp_vpc_demo_securitygroup']  # public 
     secgrpnames_private = ['win7rdp_vpc_demo_securitygroup']  # private
 
@@ -57,12 +61,12 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(win7_1_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    win7_1_infos = get_instances_info(instanceIdList)
-    print(win7_1_infos)
+    instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    win7_gw_infos = get_instances_info(instanceIdList)
+    print(win7_gw_infos)
 
-    # win7#2 (private) 
-    win7_2_ami_id = 'ami-06be7fb41c22e3eaa'
+    # win7 private (private) 
+
     secgrpnames_private = ['win7rdpsmbsecuritygroup']  # private
 
     private_secgrpIdlist = get_secgrpIds(secgrpnames_private)
@@ -75,31 +79,31 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(win7_2_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
-    win7_2_infos = get_instances_info(instanceIdList)
-    print(win7_2_infos)
+    instanceIdList = create_instances(win7_internl_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=False)
+    win7_internal_infos = get_instances_info(instanceIdList)
+    print(win7_internal_infos)
 
     # format csv
-    combined_infos = zip(pfsense_infos, win7_1_infos, win7_2_infos)
+    combined_infos = zip(pfsense_infos, win7_gw_infos, win7_internal_infos)
 
     info_dict_list = []
     
-    for pfsense_info, win7_1_info, win7_2_info in combined_infos:
+    for pfsense_info, win7_gw_info, win7_internal_info in combined_infos:
         info_dict = {}
         info_dict['pfsense_instance_id'] = pfsense_info['id']
         info_dict['pfsense_public_ip'] = pfsense_info['public_ip']
         for intf in pfsense_info['nets']:
             keyname = 'pfsense_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['windows7_1_instance_id'] = win7_1_info['id']
-        info_dict['windows7_1_public_ip'] = win7_1_info['public_ip']
-        for intf in win7_1_info['nets']:
-            keyname = 'windows7_1_priv_ip#' + str(intf['intf_index'])
+        info_dict['windows7_gw_instance_id'] = win7_gw_info['id']
+        info_dict['windows7_gw_public_ip'] = win7_gw_info['public_ip']
+        for intf in win7_gw_info['nets']:
+            keyname = 'windows7_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['windows7_2_instance_id'] = win7_2_info['id']
+        info_dict['windows7_internal_instance_id'] = win7_internal_info['id']
         #info_dict['windows7_2_public_ip'] = win7_1_info['public_ip']
-        for intf in win7_2_info['nets']:
-            keyname = 'windows7_2_priv_ip#' + str(intf['intf_index'])
+        for intf in win7_internal_info['nets']:
+            keyname = 'windows7_internal_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
 
         info_dict_list.append(info_dict)
@@ -123,8 +127,8 @@ def deprov(csvfile):
         instance_list = []
         for row in csv_reader:
             instance_list.append(row['pfsense_instance_id'])
-            instance_list.append(row['windows7_1_instance_id'])
-            instance_list.append(row['windows7_2_instance_id'])
+            instance_list.append(row['windows7_gw_instance_id'])
+            instance_list.append(row['windows7_internal_instance_id'])
         print('Deprovisioning {} instances'.format(len(instance_list)))
         delete_instances(instance_list)
 
