@@ -12,10 +12,12 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
+win10forensic_ami = 'win10-forensic-image-v1.0'
+
 def prov(num_instances, out_csvfile):
 
     # win10 (forensic) image 
-    win10forensic_ami_id = 'ami-0b74892f73b49d625'
+    win10forensic_ami_id = get_ami_id(win10forensic_ami) 
     secgrpnames_public = ['allows_rdp_icmp_vpc-cet']  # public 
 
     public_secgrpIdlist = get_secgrpIds(secgrpnames_public)

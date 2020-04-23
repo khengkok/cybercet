@@ -12,10 +12,12 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
+winserver2016_ami = 'win2016dc-image-v1.0'
+
 def prov(num_instances, out_csvfile):
 
     # winserver2016 image 
-    winserver2016dc_ami_id = 'ami-0374e9267e2c3ff09'
+    winserver2016dc_ami_id = get_ami_id(winserver2016_ami)
     secgrpnames_public = ['winserver2016securitygroup']  # public 
 
     public_secgrpIdlist = get_secgrpIds(secgrpnames_public)
