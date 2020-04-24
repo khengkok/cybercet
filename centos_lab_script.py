@@ -5,6 +5,7 @@ import argparse
 # Configuration:
 # centos in a single public subnet
 
+centos_ami = 'centos-image-v1.0'
 
 vpc = 'vpc-cet'
 subnet_public = 'Public subnet'
@@ -15,7 +16,7 @@ public_subnetid = get_subnetId(vpc_id, subnet_public)
 def prov(num_instances, out_csvfile):
 
     # centos image 
-    centos_ami_id = 'ami-0723c009f4e2d76f0'
+    centos_ami_id = get_ami_id(centos_ami)
     secgrpnames_public = ['allow_ssh_vpc_cet']  # public 
 
     public_secgrpIdlist = get_secgrpIds(secgrpnames_public)

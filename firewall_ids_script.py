@@ -15,14 +15,14 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-pfsense_ami_id = 'ami-0664409a3efaa1e8d'
-win7_gw_ami_id = 'ami-021ad573e15d1bf7d'
-win7_internl_ami_id = 'ami-021ad573e15d1bf7d'
+pfsense_ami = 'pfsens-image-v1.0'
+win10_gw_ami = 'win10gw-image-v1.0'
+win7_internal_ami = 'win7-image-v1.0'
 
 def prov(num_instances, out_csvfile):
 
     # pfsense 
- 
+    pfsense_ami_id =  get_ami_id(pfsense_ami)
     secgrpnames_public = ['pfsense_vpcdemo']  # public 
     secgrpnames_private = ['pfsense_vpcdemo']  # private
 
@@ -43,8 +43,8 @@ def prov(num_instances, out_csvfile):
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)
 
-    # win7_gw (public/private) 
-
+    # win10_gw (public/private) 
+    win10_gw_ami_id = get_ami_id(win10_gw_ami)
     secgrpnames_public = ['win7rdp_vpc_demo_securitygroup']  # public 
     secgrpnames_private = ['win7rdp_vpc_demo_securitygroup']  # private
 
@@ -61,12 +61,12 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    win7_gw_infos = get_instances_info(instanceIdList)
-    print(win7_gw_infos)
+    instanceIdList = create_instances(win10_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    win10_gw_infos = get_instances_info(instanceIdList)
+    print(win10_gw_infos)
 
     # win7 private (private) 
-
+    win7_internl_ami_id = get_ami_id(win7_internal_ami)
     secgrpnames_private = ['win7rdpsmbsecuritygroup']  # private
 
     private_secgrpIdlist = get_secgrpIds(secgrpnames_private)
@@ -84,11 +84,11 @@ def prov(num_instances, out_csvfile):
     print(win7_internal_infos)
 
     # format csv
-    combined_infos = zip(pfsense_infos, win7_gw_infos, win7_internal_infos)
+    combined_infos = zip(pfsense_infos, win10_gw_infos, win7_internal_infos)
 
     info_dict_list = []
     
-    for index, (pfsense_info, win7_gw_info, win7_internal_info) in  enumerate(combined_infos):
+    for index, (pfsense_info, win10_gw_info, win7_internal_info) in  enumerate(combined_infos):
         info_dict = {}
         info_dict['pfsense_instance_id'] = pfsense_info['id']
         info_dict['pfsense_public_ip'] = pfsense_info['public_ip']
@@ -97,19 +97,20 @@ def prov(num_instances, out_csvfile):
         for intf in pfsense_info['nets']:
             keyname = 'pfsense_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['windows7_gw_instance_id'] = win7_gw_info['id']
-        info_dict['windows7_gw_public_ip'] = win7_gw_info['public_ip']
-        name = 'win7gw-' + str(index+1)
-        tag_instance(info_dict['windows7_gw_instance_id'], name)
-        for intf in win7_gw_info['nets']:
-            keyname = 'windows7_gw_priv_ip#' + str(intf['intf_index'])
+
+        info_dict['win10_gw_instance_id'] = win10_gw_info['id']
+        info_dict['win10_gw_public_ip'] = win10_gw_info['public_ip']
+        name = 'win10gw-' + str(index+1)
+        tag_instance(info_dict['win10_gw_instance_id'], name)
+        for intf in win10_gw_info['nets']:
+            keyname = 'win7_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['windows7_internal_instance_id'] = win7_internal_info['id']
-        #info_dict['windows7_2_public_ip'] = win7_1_info['public_ip']
+
+        info_dict['win7_internal_instance_id'] = win7_internal_info['id'] 
         name = 'win7internal-' + str(index+1)
-        tag_instance(info_dict['windows7_internal_instance_id'], name)
+        tag_instance(info_dict['win7_internal_instance_id'], name)
         for intf in win7_internal_info['nets']:
-            keyname = 'windows7_internal_priv_ip#' + str(intf['intf_index'])
+            keyname = 'win7_internal_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
 
         info_dict_list.append(info_dict)
@@ -133,8 +134,8 @@ def deprov(csvfile):
         instance_list = []
         for row in csv_reader:
             instance_list.append(row['pfsense_instance_id'])
-            instance_list.append(row['windows7_gw_instance_id'])
-            instance_list.append(row['windows7_internal_instance_id'])
+            instance_list.append(row['win10_gw_instance_id'])
+            instance_list.append(row['win7_internal_instance_id'])
         print('Deprovisioning {} instances'.format(len(instance_list)))
         delete_instances(instance_list)
 

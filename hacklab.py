@@ -15,13 +15,18 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-kali_ami_id = 'ami-08d5b1b0f5ed7e5f5'
-win7_gw_ami_id = 'ami-0535e8383179a6d1f'
+kali_ami = 'kali2020-image-v1.0'
+win10_gw_ami = 'win10gw-image-v1.0'
+win7_victim_ami = 'win7-victim-image-v1.0'
+
+
+win10_gw_ami_id = 'ami-0535e8383179a6d1f'
 win7_victim_ami_id = 'ami-0a559734b59b0cb1c'
 
 def prov(num_instances, out_csvfile):
 
     # kali
+    kali_ami_id = get_ami_id(kali_ami)
     secgrpnames_public = ['allow_ssh_vpc_demo']  # public 
     secgrpnames_private = ['block_all_inbound_vpc_demo', 'allow_4444_5555_inbound_vpc_demo']  # private
 
@@ -42,7 +47,8 @@ def prov(num_instances, out_csvfile):
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 
-    # win7 gw (public/private) 
+    # win10 gw (public/private) 
+    win10_gw_ami_id = get_ami_id(win10_gw_ami)
     secgrpnames_public = ['allow_rdp_vpc_demo']  # public 
     secgrpnames_private = ['block_all_inbound_vpc_demo']  # private
 
@@ -59,11 +65,12 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(win7_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
-    win7_gw_infos = get_instances_info(instanceIdList)
-    print(win7_gw_infos)
+    instanceIdList = create_instances(win10_gw_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    win10_gw_infos = get_instances_info(instanceIdList)
+    print(win10_gw_infos)
 
     # win7 victim (private) 
+    win7_victim_ami_id = get_ami_id(win7_victim_ami)
     secgrpnames_private = ['allow_rdp_smb_vpc_demo']  # private
 
     private_secgrpIdlist = get_secgrpIds(secgrpnames_private)
@@ -81,11 +88,11 @@ def prov(num_instances, out_csvfile):
     print(win7_victim_infos)
 
     # format csv
-    combined_infos = zip(kali_infos, win7_gw_infos, win7_victim_infos)
+    combined_infos = zip(kali_infos, win10_gw_infos, win7_victim_infos)
 
     info_dict_list = []
     
-    for index, (pfsense_info, win7_1_info, win7_2_info) in enumerate(combined_infos):
+    for index, (pfsense_info, win10_gw_info, win7_victim_info) in enumerate(combined_infos):
         info_dict = {}
         info_dict['kali_instance_id'] = pfsense_info['id']
         name = 'kali-' + str(index+1)
@@ -94,17 +101,19 @@ def prov(num_instances, out_csvfile):
         for intf in pfsense_info['nets']:
             keyname = 'kali_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['win7_gw_instance_id'] = win7_1_info['id']
-        name = 'win7gw-' + str(index+1)
-        tag_instance(info_dict['win7_gw_instance_id'], name)
-        info_dict['win7_gw_public_ip'] = win7_1_info['public_ip']
-        for intf in win7_1_info['nets']:
-            keyname = 'win7_gw_priv_ip#' + str(intf['intf_index'])
+
+        info_dict['win10_gw_instance_id'] = win10_gw_info['id']
+        name = 'win10gw-' + str(index+1)
+        tag_instance(info_dict['win10_gw_instance_id'], name)
+        info_dict['win10_gw_public_ip'] = win10_gw_info['public_ip']
+        for intf in win10_gw_info['nets']:
+            keyname = 'win10_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
-        info_dict['win7_victim_instance_id'] = win7_2_info['id']
+
+        info_dict['win7_victim_instance_id'] = win7_victim_info['id']
         name = 'win7victim-' + str(index+1)
         tag_instance(info_dict['win7_victim_instance_id'], name)
-        for intf in win7_2_info['nets']:
+        for intf in win7_victim_info['nets']:
             keyname = 'win7_victim_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
 
@@ -129,7 +138,7 @@ def deprov(csvfile):
         instance_list = []
         for row in csv_reader:
             instance_list.append(row['kali_instance_id'])
-            instance_list.append(row['win7_gw_instance_id'])
+            instance_list.append(row['win10_gw_instance_id'])
             instance_list.append(row['win7_victim_instance_id'])
         print('Deprovisioning {} instances'.format(len(instance_list)))
         delete_instances(instance_list)

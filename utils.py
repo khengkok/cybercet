@@ -52,6 +52,23 @@ def get_subnetId(vpc_id, subnetname):
                     return subnet['SubnetId']
     return None
 
+def get_ami_id(image_name): 
+    response = ec2_client.describe_images(
+        Filters = [
+            {
+                'Name': 'name',
+                'Values': [image_name]
+            }
+        ]
+    )
+    # assume only 1 image matches the name
+    images = response['Images']
+    if len(images) > 1:
+        raise Exception('more than 1 image matches the image name={}'.format(image_name))
+    elif len(images) == 0:
+        raise Exception('no image matches the image name={}'.format(image_name))
+    return images[0]['ImageId']
+
 def create_interface(subnet_id):
     response = ec2_client.create_network_interface(
                     SubnetId = subnet_id

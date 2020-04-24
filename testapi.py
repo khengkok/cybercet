@@ -43,5 +43,4 @@ from utils import *
 
 # get_instances_info(instanceIdList)
 
-idList  = ['i-06cf898e776e9e228']
-tag_instances(idList, 'kali')
+print(get_ami_id('win2016dc-image-v1.0'))
