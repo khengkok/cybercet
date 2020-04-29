@@ -15,8 +15,9 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-win2016dc_ami_id = 'ami-0374e9267e2c3ff09'
-kali2020_ami_id = 'ami-08d5b1b0f5ed7e5f5'
+win2016dc_ami = 'win2016dc-image-v1.0'
+kali2020_ami = 'kali2020-image-v1.4'
+
 
 
 def prov(num_instances, out_csvfile):
@@ -42,6 +43,7 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
+    win2016dc_ami_id = get_ami_id(win2016dc_ami)
     instanceIdList = create_instances(win2016dc_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True, size='t2.large')
     
     win2016dc_infos = get_instances_info(instanceIdList)
@@ -65,6 +67,7 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
+    kali2020_ami_id = get_ami_id(kali2020_ami)
     instanceIdList = create_instances(kali2020_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
     
     kali_infos = get_instances_info(instanceIdList)

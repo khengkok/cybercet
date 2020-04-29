@@ -5,7 +5,7 @@ import argparse
 # Configuration:
 # centos in a single public subnet
 
-centos_ami = 'centos-image-v1.0'
+centos_ami = 'centos-image-v1.5'
 
 vpc = 'vpc-cet'
 subnet_public = 'Public subnet'

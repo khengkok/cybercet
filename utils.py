@@ -200,6 +200,9 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
 
     notReadyList = instanceIdList.copy()
 
+    # wait for a while in case the instances are not ready to be described 
+    time.sleep(5)
+    
     while len(notReadyList) != 0:
         response = ec2_client.describe_instance_status(
                 InstanceIds=notReadyList
