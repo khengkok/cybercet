@@ -18,7 +18,7 @@ private_subnetid  = get_subnetId(vpc_id,subnet_private)
 #pfsense_ami = 'pfsens-image-v1.0'
 pfsense_ami = 'pfsense-image-v3.0'
 win10_gw_ami = 'win10gw-image-v1.0'
-win7_internal_ami = 'win7-image-v4.0'
+win7_internal_ami = 'win7-image-v4.1'
 
 def prov(num_instances, out_csvfile):
 
