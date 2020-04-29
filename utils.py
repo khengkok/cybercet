@@ -152,7 +152,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     
     return instances[0]
 
-def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None):
+def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None, src_dst_chk=True):
     netconfiglist = []
 
     # assume 1st one is for public 
@@ -219,10 +219,17 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
                         )
                         if_id = create_net_response['NetworkInterface']['NetworkInterfaceId']
                         print('attaching if_id = {}, to instance_id = {}'.format(if_id, running_instance_id))
-                        ec2_client.attach_network_interface(
+                        attach_response = ec2_client.attach_network_interface(
                             DeviceIndex = index,
                             InstanceId = running_instance_id,
                             NetworkInterfaceId = if_id
+                        )
+                        attachment_id = attach_response['AttachmentId']
+                        ec2_client.modify_network_interface_attribute(
+                            NetworkInterfaceId=if_id,
+                            SourceDestCheck={
+                                'Value': src_dst_chk
+                            }
                         )
                     notReadyList.remove(running_instance_id)
             print('not ready list = {}'.format(notReadyList))  

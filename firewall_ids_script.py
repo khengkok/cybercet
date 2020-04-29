@@ -15,9 +15,10 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-pfsense_ami = 'pfsens-image-v1.0'
+#pfsense_ami = 'pfsens-image-v1.0'
+pfsense_ami = 'pfsense-image-v3.0'
 win10_gw_ami = 'win10gw-image-v1.0'
-win7_internal_ami = 'win7-image-v1.0'
+win7_internal_ami = 'win7-image-v4.0'
 
 def prov(num_instances, out_csvfile):
 
@@ -39,7 +40,7 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(pfsense_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True)
+    instanceIdList = create_instances(pfsense_ami_id, subnet_secgrps_tuples, num_instances, auto_assign_public_ip=True, src_dst_chk=False)
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)
 
@@ -103,7 +104,7 @@ def prov(num_instances, out_csvfile):
         name = 'win10gw-' + str(index+1)
         tag_instance(info_dict['win10_gw_instance_id'], name)
         for intf in win10_gw_info['nets']:
-            keyname = 'win7_gw_priv_ip#' + str(intf['intf_index'])
+            keyname = 'win10_gw_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
 
         info_dict['win7_internal_instance_id'] = win7_internal_info['id'] 
