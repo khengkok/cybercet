@@ -33,7 +33,7 @@ def prov(num_instances, out_csvfile):
                                       subnet_secgrps_tuples, 
                                       num_instances, 
                                       auto_assign_public_ip=True,
-                                      size='t2.large')
+                                      size='t2.small')
                                       
     
     centos_infos = get_instances_info(instanceIdList)
