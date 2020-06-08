@@ -349,6 +349,10 @@ def tag_instances(instanceIdList, name):
                     'Key': 'Name',
                     'Value': tagValue
                 },
+                {
+                    'Key': 'Group',
+                    'Value': 'cybercet'
+                }
             ]
         )
 
