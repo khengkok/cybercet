@@ -1,5 +1,12 @@
 # Cyber Security CET - AWS Cloud User Guide
 
+**Updated 8th June 2020**
+To save computing costs, you may want to use smaller instances when provisioning your scripts. You can check out the version with smaller instances using the following git commands: 
+
+```bash
+git checkout lite-version
+```
+
 This repo contains scripts to provision various aws instances for different labs
 utils contains the core functions. 
 
