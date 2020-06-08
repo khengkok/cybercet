@@ -2,7 +2,8 @@
 
 **Updated 8th June 2020**
 
-To save computing costs, you may want to use smaller instances when provisioning your scripts. You can check out the version with smaller instances using the following git commands:
+
+To save computing costs, you may want to use smaller instances when provisioning. You can check out the script versions that provision smaller instances using the following git commands:
 
 ```bash
 git checkout lite-version
