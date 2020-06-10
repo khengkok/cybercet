@@ -47,7 +47,7 @@ def prov(num_instances, out_csvfile):
                                         subnet_secgrps_tuples, 
                                         num_instances, 
                                         auto_assign_public_ip=True,
-                                        size='t2.micro')
+                                        size='t2.small')
     kali_infos = get_instances_info(instanceIdList)
     print(kali_infos)
 
@@ -73,7 +73,7 @@ def prov(num_instances, out_csvfile):
                                     subnet_secgrps_tuples, 
                                     num_instances, 
                                     auto_assign_public_ip=True,
-                                    size='t2.micro')
+                                    size='t2.medium')
                                     
     win10_gw_infos = get_instances_info(instanceIdList)
     print(win10_gw_infos)
@@ -96,7 +96,7 @@ def prov(num_instances, out_csvfile):
                                     subnet_secgrps_tuples, 
                                     num_instances, 
                                     auto_assign_public_ip=False,
-                                    size='t2.micro')
+                                    size='t2.medium')
                                     
     win7_victim_infos = get_instances_info(instanceIdList) 
     print(win7_victim_infos)
