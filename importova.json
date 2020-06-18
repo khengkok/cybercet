@@ -1,0 +1,10 @@
+[
+  {
+    "Description": "winddk",
+    "Format": "ova",
+    "UserBucket": {
+        "S3Bucket": "cybersecuritycet",
+        "S3Key": "windows10x64.ova"
+    }
+  }
+]
