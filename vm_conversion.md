@@ -28,6 +28,10 @@ aws iam put-role-policy --role-name vmimport --policy-name vmimport --policy-doc
 
 3. **Import the image to EC2**
 
+You need to first export your VMWare workstation images to OVA (single file format) format. 
+Upload your ova to the bucket specified in the policy file (e.g. `cybersecuritycet` bucket)
+
+
 Now we need to create a json file to describe the image format (e.g. OVA), and the location of the image (the key of the ova file in our bucket, e.g. windows10fromVMWare.ova). An example of the json file, [importova.json](importova.json) is given. 
 
 Now you start the importing process: 
