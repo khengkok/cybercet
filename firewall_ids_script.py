@@ -45,7 +45,7 @@ def prov(num_instances, out_csvfile):
                                 num_instances, 
                                 auto_assign_public_ip=True, 
                                 src_dst_chk=False,
-                                size='t2.medium')
+                                size='t2.medium', rebootFlag=True)
 
     pfsense_infos = get_instances_info(instanceIdList)
     print(pfsense_infos)

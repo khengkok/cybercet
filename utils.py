@@ -6,6 +6,8 @@ ec2_client = boto3.client('ec2')
 ec2 = boto3.resource('ec2')
 
 POLLING_WAIT_INTERVAL = 3   # 3 seconds of waiting
+SYSTEM_CHECK_INTERVAL = 3   # system check every 2 seconds
+MAX_INSTANCE_READY_WAIT_TIME = 60  # 60 seconds 
 
 def get_secgrpIds(secgrpnames):
     response = ec2_client.describe_security_groups(
@@ -152,7 +154,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     
     return instances[0]
 
-def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None, src_dst_chk=True):
+def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None, src_dst_chk=True, systemCheckFlag=False, rebootFlag=False):
     netconfiglist = []
 
     # assume 1st one is for public 
@@ -239,6 +241,62 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
         else:
             print('not ready {}'.format(instanceStatuses))
             time.sleep(POLLING_WAIT_INTERVAL)
+
+    if systemCheckFlag: 
+        print('performing system check')
+        statusCheckOKList = instanceIdList.copy()
+
+        maxCount = MAX_INSTANCE_READY_WAIT_TIME/SYSTEM_CHECK_INTERVAL
+        count = 0
+        while len(statusCheckOKList) != 0:
+            response = ec2_client.describe_instance_status(
+                    InstanceIds=statusCheckOKList
+            )
+            instanceStatuses = response['InstanceStatuses']
+            for status in instanceStatuses: 
+                running_instance_id = status['InstanceId']
+                instanceStatus = status['InstanceStatus']['Status']
+                systemStatus = status['SystemStatus']['Status']
+                if instanceStatus == 'ok' and systemStatus == 'ok':
+                    print('system check passed for {}'.format(running_instance_id))
+                    statusCheckOKList.remove(running_instance_id)
+                    print('system check yet to pass list = {}'.format(statusCheckOKList))  
+                elif instanceStatus == 'impaired' or systemStatus == 'impaired':
+                    print('system check failed for {}'.format(running_instance_id))
+                    ec2_client.reboot_instances(InstanceIds = [running_instance_id])
+                else:
+                    print('check status for {} is instanceStatus={}, systemStatus={}'.format(running_instance_id, instanceStatus,systemStatus))
+                    if count > maxCount: 
+                        print('exceeded max wait time, system check considered failed for {}, so reboot'.format(running_instance_id))
+                        ec2_client.reboot_instances(InstanceIds = [running_instance_id])
+
+            print('will perform system check again in {} seconds'.format(SYSTEM_CHECK_INTERVAL))
+            time.sleep(SYSTEM_CHECK_INTERVAL)
+            count += 1
+            
+    # This is a workaround for situation where pfsense already booted before the network intf
+    # is attached to the instance. As the pfsense cannot see the interface, it treated it as 
+    # misconfigured interface, and go into a mode to wait for user to manually add VLAN, etc, and 
+    # go into permanent 'wait for user to enter' mode, hence the instanceCheck failed, and internet reachibility is affected
+    if rebootFlag: 
+        rebootingList = instanceIdList.copy()
+        print('reboot requested, rebooting all instances')
+        ec2_client.reboot_instances(InstanceIds=rebootingList)
+
+        while len(rebootingList) != 0:
+            response = ec2_client.describe_instance_status(
+                    InstanceIds=rebootingList
+            )
+            instanceStatuses = response['InstanceStatuses']
+            for status in instanceStatuses: 
+                running_instance_id = status['InstanceId']
+                instanceState = status['InstanceState']['Name'] 
+                instanceStatus = status['InstanceStatus']['Status']
+                systemStatus = status['SystemStatus']['Status']
+                if instanceState == 'running':
+                    print('check status for {} is instanceStatus={}, systemStatus={}'.format(running_instance_id, instanceStatus,systemStatus))
+                    rebootingList.remove(running_instance_id)
+            time.sleep(SYSTEM_CHECK_INTERVAL)
 
     return instanceIdList
 
