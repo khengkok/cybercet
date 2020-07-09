@@ -5,7 +5,7 @@ import argparse
 # Configuration:
 # centos in a single public subnet
 
-centos_ami = 'CentosV4'
+centos_ami = 'CentosV2_GCC_NTP'
 
 vpc = 'vpc-cet'
 subnet_public = 'Public subnet'
