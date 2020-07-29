@@ -12,7 +12,7 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-Win10CSC_ami = 'Win10_CSC_D123'
+Win10CSC_ami = 'Win10_CSC_D123_New'
 
 def prov(num_instances, out_csvfile):
 
