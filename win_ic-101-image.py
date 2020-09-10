@@ -12,7 +12,7 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-win10PacketTracer_ami = 'Win10_IC-101-Image'
+win10PacketTracer_ami = 'Win10-IC-101'
 
 def prov(num_instances, out_csvfile):
 
