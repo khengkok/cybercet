@@ -15,7 +15,7 @@ public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
 win10_gw_ami = 'win10gw-image-v1.0'
-win10_malware_ami = 'win10-malwan-flarevm-workshop-v1.0'
+win10_malware_ami = 'win10-malwan-flarevm-workshop-v2.0'
 
 def prov(num_instances, out_csvfile):
 

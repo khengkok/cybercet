@@ -3,8 +3,9 @@ import csv
 import argparse
 
 # Configuration:
-# windows 10 in a single public subnet
+# centos in a single public subnet
 
+centos_ami = 'Centos_GCC_NTP_VSFTPD'
 
 vpc = 'vpc-cet'
 subnet_public = 'Public subnet'
@@ -12,13 +13,11 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-win10PacketTracer_ami = 'Win10-IC-101'
-
 def prov(num_instances, out_csvfile):
 
-    # win10 (PacketTracer) image 
-    win10PacketTracer_ami_id = get_ami_id(win10PacketTracer_ami) 
-    secgrpnames_public = ['allows_rdp_icmp_vpc-cet']  # public 
+    # centos image 
+    centos_ami_id = get_ami_id(centos_ami)
+    secgrpnames_public = ['centos-allow-ftp']  # public -- change here for security group name
 
     public_secgrpIdlist = get_secgrpIds(secgrpnames_public)
 
@@ -30,28 +29,28 @@ def prov(num_instances, out_csvfile):
 
     subnet_secgrps_tuples = zip(subnetIdList, secgrpIdsList)
 
-    instanceIdList = create_instances(win10PacketTracer_ami_id, 
+    instanceIdList = create_instances(centos_ami_id, 
                                       subnet_secgrps_tuples, 
                                       num_instances, 
                                       auto_assign_public_ip=True,
-                                      size='t2.medium')
-
-    tag_instances(instanceIdList, 'win10PacketTracer')                                  
-    win10PacketTracer_infos = get_instances_info(instanceIdList)
-    print(win10PacketTracer_infos)
+                                      size='t2.small')
+                                      
+    
+    centos_infos = get_instances_info(instanceIdList)
+    print(centos_infos)
 
 
     # format csv
     info_dict_list = []
     
-    for index, win_info in enumerate(win10PacketTracer_infos):
+    for index, centos_info in enumerate(centos_infos):
         info_dict = {}
-        info_dict['win10PacketTracer_instance_id'] = win_info['id']
-        info_dict['win10PacketTracer_public_ip'] = win_info['public_ip']
-        name = 'win10PacketTracer-' + str(index+1)
-        tag_instance(info_dict['win10PacketTracer_instance_id'], name)
-        for intf in win_info['nets']:
-            keyname = 'win10PacketTracer_priv_ip#' + str(intf['intf_index'])
+        info_dict['centos_instance_id'] = centos_info['id']
+        info_dict['centos_public_ip'] = centos_info['public_ip']
+        name = 'centos-' + str(index+1)
+        tag_instance(info_dict['centos_instance_id'], name)
+        for intf in centos_info['nets']:
+            keyname = 'centos_priv_ip#' + str(intf['intf_index'])
             info_dict[keyname] = intf['priv_ip']
 
         info_dict_list.append(info_dict)
@@ -74,7 +73,7 @@ def deprov(csvfile):
         csv_reader = csv.DictReader(csv_file)
         instance_list = []
         for row in csv_reader:
-            instance_list.append(row['win10PacketTracer_instance_id'])
+            instance_list.append(row['centos_instance_id'])
         print('Deprovisioning {} instances'.format(len(instance_list)))
         delete_instances(instance_list)
 

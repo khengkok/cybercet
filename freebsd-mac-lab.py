@@ -6,6 +6,7 @@ import argparse
 # FreeBSD in a single public subnet
 
 FreeBSD_ami = 'FreeBSD-MAC-Lab'
+credentials = 'testing'
 
 vpc = 'vpc-cet'
 subnet_public = 'Public subnet'
