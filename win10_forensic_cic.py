@@ -12,7 +12,7 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-win10forensic_ami = 'win10-forensic-image-v2.0'
+win10forensic_ami = 'win10-forensic-image-v2.1.1'
 
 def prov(num_instances, out_csvfile):
 
