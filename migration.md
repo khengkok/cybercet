@@ -16,7 +16,6 @@ In the NEW account:
 - Goto AMI page and in the list of AMI images, select Private Images and you should be able to see the AMI that you shared earlier
 - Select the AMI and right click and select Copy AMI
 - In the Copy AMI, make sure you select the same region as the OLD account (e.g. ap-southeast1/Asia Pacific (Singapore)) and click COPY AMI
-- 
 
 ### Create VPCs and associated subnets
 the two VPCs: vpc-demo and vpc-cet have been re-created, and an internet-gw has been associated with each of them
@@ -26,6 +25,8 @@ vpc-cet: "Public subnet"
 Routing tables have been configured for all these subnets. 
 
 **Respective instructors please check if the routing works properly after you launch your VMs**
+**If you have create other VPCs, other than the above, please recreate it yourself**
+
 
 ### Create security groups
 
