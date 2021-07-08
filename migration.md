@@ -1,3 +1,6 @@
+### Update your local repo with the updated version of utils.py 
+The updated version of utils.py contains additional argument in describe_images() call, i.e. Owners.  This is to prevent getting duplicate image names as the shared ami from the OLD account also have the same image name. 
+
 ### Share AMI to new account 
 
 In the OLD acccount:
