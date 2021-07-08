@@ -61,7 +61,8 @@ def get_ami_id(image_name):
                 'Name': 'name',
                 'Values': [image_name]
             }
-        ]
+        ], 
+        Owners = ['self']
     )
     # assume only 1 image matches the name
     images = response['Images']
