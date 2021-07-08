@@ -40,5 +40,10 @@ Check if the security groups already created (maybe by others) in the NEW accoun
 ### AMIs that are from Marketplace 
 
 Those AMIs from marketplace cannot be copied to new accounts and must be re-created. These include:
-Kali
-pfSense
+- Kali
+- pfSense
+
+Using the launch wizard, select the corresponding image from marketplace and launch the VM into an appropriate subnet, login, apply the changes, test it, and then stop the VM instance.  Right-click on stopped instance, and choose Create Image option and give your AMI the same name as your scripts so that you DON'T have to change the script. 
+
+
+If there is any customization done on the marketplace images, **respective instructors need to apply the same changes to the new instances launched from Marketplace**
