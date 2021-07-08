@@ -1,9 +1,3 @@
-### Steps: 
-
-- Share the VM images to new account 
-- Copy shared VM to new account 
-
-
 ### Share AMI to new account 
 
 In the OLD acccount:
