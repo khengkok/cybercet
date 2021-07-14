@@ -12,7 +12,7 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-win10appsec_ami = 'win10-appsec-ssdt-day4'
+win10appsec_ami = 'win10-appsec-ssdt-day4v2'
 
 def prov(num_instances, out_csvfile):
 
