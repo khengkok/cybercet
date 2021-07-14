@@ -22,7 +22,7 @@ vpc-cet: "Public subnet"
 Routing tables have been configured for all these subnets. 
 
 **Respective instructors please check if the routing works properly after you launch your VMs**
-**If you have create other VPCs, other than the above, please recreate it yourself**
+**If you have created other VPCs on your own in the OLD account, other than the above, please recreate it yourself.**
 
 
 ### Create security groups
@@ -43,5 +43,6 @@ Those AMIs from marketplace cannot be copied to new accounts and must be re-crea
 
 Using the launch wizard, select the corresponding image from marketplace and launch the VM into an appropriate subnet, login, apply the changes, test it, and then stop the VM instance.  Right-click on stopped instance, and choose Create Image option and give your AMI the same name as your scripts so that you DON'T have to change the script. 
 
-
 If there is any customization done on the marketplace images, **respective instructors need to apply the same changes to the new instances launched from Marketplace**
+
+**Update: pfSense has been migrated to the new account, the respective instructor please test and make sure it continues to work**
