@@ -6,7 +6,7 @@ The updated version of utils.py contains additional argument in describe_images(
 In the OLD acccount:
 
 - Right Click on the AMI you want to share and select "Modify  Image Permissions" 
-- Type in the **NEW** account ID (109974893428)
+- Type in the **NEW** account ID (e.g. XXXXX)
 - Remember to check the box "Add create volumn permissions"
 
 In the NEW account:
