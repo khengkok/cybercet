@@ -15,13 +15,10 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-kali_ami = 'kali2020-image-v1.4'
+kali_ami = 'kali2021-image-v1.4'
 win10_gw_ami = 'win10gw-image-v1.0'
 win7_victim_ami = 'win7-victim-image-v1.0'
 
-
-win10_gw_ami_id = 'ami-0535e8383179a6d1f'
-win7_victim_ami_id = 'ami-0a559734b59b0cb1c'
 
 def prov(num_instances, out_csvfile):
 
