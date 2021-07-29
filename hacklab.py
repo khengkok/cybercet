@@ -15,7 +15,7 @@ vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 private_subnetid  = get_subnetId(vpc_id,subnet_private)
 
-kali_ami = 'kali2021-image-v1.4'
+kali_ami = 'kali2021-image-v2'
 win10_gw_ami = 'win10gw-image-v1.0'
 win7_victim_ami = 'win7-victim-image-v1.0'
 
