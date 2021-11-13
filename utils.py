@@ -129,7 +129,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     while True:
         response = ec2_client.describe_instance_status(
                 InstanceIds=[instanceId])
-        print(response)
+
         if response['InstanceStatuses']:
             if response['InstanceStatuses'][0]['InstanceState']['Name'] == 'running':
                 break
@@ -155,7 +155,7 @@ def create_single_instance(ami_id, subnet_secgrp_tuples):
     
     return instances[0]
 
-def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None, src_dst_chk=True, systemCheckFlag=False, rebootFlag=False):
+def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_public_ip = True, size='t2.medium', mounted_vol=None, src_dst_chk=True, systemCheckFlag=False, rebootFlag=False, device_name='/dev/sda1'):
     netconfiglist = []
 
     # assume 1st one is for public 
@@ -173,10 +173,10 @@ def create_instances(ami_id, subnet_secgrp_tuples, num_instances, auto_assign_pu
     devicemappings = []
     # add the default root volume 
     rootvol = {}
-    rootvol['DeviceName'] = '/dev/sda1'
+    rootvol['DeviceName'] = device_name
     rootvol['Ebs'] = {}
     rootvol['Ebs']['DeleteOnTermination'] = True
-
+    
     devicemappings.append(rootvol)
 
     if mounted_vol != None: 
@@ -393,12 +393,17 @@ def delete_instances(instanceIdList):
     ec2_client.terminate_instances(InstanceIds = instanceIdList)
     return 
 
-def tag_instances(instanceIdList, name):
+def tag_instances(instanceIdList, name, cost_group='cybercet'):
 
     for index, instanceId in enumerate(instanceIdList):
         tagValue = name + '-' + str(index+1)
-        print('tagging {} with value = {}'.format(instanceId, tagValue))
-        response = ec2_client.create_tags(
+        tag_instance(instanceId, tagValue, cost_group)
+        
+            
+
+def tag_instance(instanceId, name, cost_group='cybercet'):
+    print('tagging {} with name = {} and cost group = {}'.format(instanceId, name, cost_group))
+    response = ec2_client.create_tags(
             DryRun=False,
             Resources=[
                 instanceId,
@@ -406,25 +411,33 @@ def tag_instances(instanceIdList, name):
             Tags=[
                 {
                     'Key': 'Name',
-                    'Value': tagValue
+                    'Value': name
                 },
                 {
                     'Key': 'Group',
-                    'Value': 'cybercet'
+                    'Value': cost_group
                 }
             ]
         )
-
-def tag_instance(instancId, name):
-    response = ec2_client.create_tags(
+        
+    volumes = ec2_client.describe_volumes(
+        Filters=[{'Name':'attachment.instance-id','Values':[instanceId]}]
+    )
+    for disk in volumes['Volumes']:
+        #print(disk['VolumeId'], disk['VolumeType'], disk['Size'])
+        response = ec2_client.create_tags(
             DryRun=False,
             Resources=[
-                instancId,
+                disk['VolumeId'],
             ],
             Tags=[
                 {
                     'Key': 'Name',
                     'Value': name
                 },
+                {
+                    'Key': 'Group',
+                    'Value': cost_group
+                }
             ]
         )
