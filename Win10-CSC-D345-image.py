@@ -12,7 +12,7 @@ subnet_public = 'Public subnet'
 vpc_id = get_vpcId(vpc)
 public_subnetid = get_subnetId(vpc_id, subnet_public)
 
-Win10CSC_ami = 'CSC-2023'
+Win10CSC_ami = 'CSC2024_Win10_22H2'
 
 def prov(num_instances, out_csvfile):
 
@@ -36,7 +36,7 @@ def prov(num_instances, out_csvfile):
                                       auto_assign_public_ip=True,
                                       size='t2.large')
 
-    tag_instances(instanceIdList, 'Win10CSC-2023')                                  
+    tag_instances(instanceIdList, 'Win10CSC-2024')                                  
     Win10CSC_infos = get_instances_info(instanceIdList)
     print(Win10CSC_infos)
 
