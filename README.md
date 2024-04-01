@@ -60,6 +60,7 @@ Here are the different scripts for the various labs (based on Wanling's Google S
 
 |Topic               |Workshop                   |Primary Teaching Staff|Course|VM1|VM2|VM3                     |Scripts_to_use |
 |--------------------|---------------------------|----------------------|------|---|---|------------------------|---------------|
+|CyberSecurity(CSIT) |All five days              |Tin Aung Win          |CSC   |Win 10|   |                     |Win10-CSC-D345-image.py|
 |Cyber Forensics     |Data Acquisition           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
 |Cyber Forensics     |Data Examination           |Wanling               |CEFP  |Win 10|   |                        |win10_forensic_appsec_script.py|
 |Malware Analysis    |Lab Setup                  |Wanling               |CEFP  |Win 7 - malware analysis|Win 7 - Gateway|                        |malware_lab_script.py|
